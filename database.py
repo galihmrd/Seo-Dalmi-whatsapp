@@ -15,7 +15,6 @@ def ocrAI(photo, filename, key):
        text = f.read()
        f.close()
        # print(text)
-       os.remove(photo)
        return chat_gpt(text, key)
     except Exception as e:
        print(e)
