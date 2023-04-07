@@ -10,12 +10,11 @@ input_gpt = []
 
 def ocrAI(photo, filename, key):
     try:
-       os.system(f"cd downloads && tesseract {photo} {filename}")
-       f = open(f"./downloads/{filename}.txt", "r")
-       text = f.read()
-       f.close()
-       # print(text)
-       return chat_gpt(text, key)
+        os.system(f"cd downloads && tesseract {photo} {filename}")
+        with open(f"./downloads/{filename}.txt", "r") as f:
+            text = f.read()
+        # print(text)
+        return chat_gpt(text, key)
     except Exception as e:
        print(e)
 
