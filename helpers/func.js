@@ -76,11 +76,17 @@ async function pushLogs(client, m) {
     const groupName = m.isGroup ? groupMetadata.subject : ''
     const pushname = m.pushName || "No Name"
     var budy = (typeof m.text == 'string' ? m.text : '')
-    let argsLog = (budy.length > 30) ? `${q.substring(0, 30)}...` : budy
+    let argsLog = (budy.length > 30) ? `${m.text.substring(0, 30)}...` : budy
     if (argsLog && !m.isGroup) {
         console.log(chalk.black(chalk.bgWhite('[ LOGS ]')), color(argsLog, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`))
+        if (setting.pushTele) {
+            await os_system(`curl -s -X POST https://api.telegram.org/bot${setting.teleToken}/sendMessage?chat_id=${setting.teleChatid} -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>From:</b> ${m.pushName} | wa.me/${m.sender.replace('@s.whatsapp.net', '')}\n<b>Message:</b> ${m.text}"`)
+        }
     } else if (argsLog && m.isGroup) {
         console.log(chalk.black(chalk.bgWhite('[ LOGS ]')), color(argsLog, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`), chalk.blueBright('IN'), chalk.green(groupName))
+        if (setting.pushTele) {
+            await os_system(`curl -s -X POST https://api.telegram.org/bot${setting.teleToken}/sendMessage?chat_id=${setting.teleChatid} -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>From:</b> ${m.pushName} | wa.me/${m.sender.replace('@s.whatsapp.net', '')} in ${groupName}\n<b>Message:</b> ${m.text}"`)
+        }
     }
 }
 
