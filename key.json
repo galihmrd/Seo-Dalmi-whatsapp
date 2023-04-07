@@ -1,0 +1,7 @@
+{
+        "keyopenai": "OPEN_AI_API_KEY",
+        "rest_api": "Hubungi: http://t.me/gmardiana",
+        "pushTele": false,
+        "teleChatid": "TELEGRAM_CHAT_ID",
+        "teleToken": "TELEGRAM_BOT_TOKEN",
+}
