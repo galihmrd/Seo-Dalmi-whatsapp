@@ -3,5 +3,5 @@
         "rest_api": "Hubungi: http://t.me/gmardiana",
         "pushTele": false,
         "teleChatid": "TELEGRAM_CHAT_ID",
-        "teleToken": "TELEGRAM_BOT_TOKEN",
+        "teleToken": "TELEGRAM_BOT_TOKEN"
 }
