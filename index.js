@@ -146,8 +146,6 @@ async function startHisoka() {
             if (!client.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
             if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) return
             m = smsg(client, mek, store)
-            require("./src/media_downloader")(client, m, chatUpdate, store)
-            require("./src/chat_gpt")(client, m, chatUpdate, store)
             require("./src/misc")(client, m, chatUpdate, store)
         } catch (err) {
             console.log(err)
