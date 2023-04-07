@@ -68,7 +68,7 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
         if (mType === 'imageMessage') {
             try {
                 await download_media(chatUpdate.messages, number)
-                const result = await ocr_gpt(`{number}.jpeg`, number)
+                const result = await ocr_gpt(`${number}.jpeg`, number)
                 m.reply(result)
                 await os_system(`rm -rf downloads/${number}.jpeg`)
             } catch {
