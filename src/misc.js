@@ -1,7 +1,7 @@
 const fs = require('fs')
 const fetch = require('node-fetch')
 const ffmpeg = require('fluent-ffmpeg')
-const { os_system, download_media, ask_ai, ocr_gpt, speech2text } = require('../helpers/func')
+const { pushLogs, os_system, download_media, ask_ai, ocr_gpt, speech2text } = require('../helpers/func')
 
 const setting = require('../key.json')
 const domain = ['vt.tiktok.com', 'app-va.tiktokv.com', 'vm.tiktok.com',
@@ -16,6 +16,7 @@ const domain = ['vt.tiktok.com', 'app-va.tiktokv.com', 'vm.tiktok.com',
 module.exports = sansekai = async (client, m, chatUpdate, store) => {
     const mType = Object.keys (chatUpdate.messages[0].message)[0]
     const number = m.sender.replace('@s.whatsapp.net', '')
+    await pushLogs(client, m)
 
     // Group and private
     if (m.text.startsWith('stiker') || m.text.startsWith('Stiker') || m.text.startsWith('sticker') || m.text.startsWith('Sticker')) {

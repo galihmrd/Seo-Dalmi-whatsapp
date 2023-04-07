@@ -1,3 +1,4 @@
+const chalk = require('chalk')
 const { python } = require("pythonia")
 const { exec } = require("child_process");
 const { downloadMediaMessage } = require('@adiwajshing/baileys');
@@ -5,6 +6,10 @@ const { writeFile } = require('fs/promises')
 const { Configuration, OpenAIApi } = require("openai")
 
 const setting = require('../key.json')
+const color = (text, color) => {
+            return !color ? chalk.green(text) : chalk.keyword(color)(text)
+        }
+
 
 async function os_system(prompt) {
     exec(prompt, (error, stdout, stderr) => {
@@ -66,4 +71,18 @@ async function speech2text(filename){
     return result
 }
 
-module.exports = { os_system, download_media, ask_ai, ocr_gpt, speech2text }
+async function pushLogs(client, m) {
+    const groupMetadata = m.isGroup ? await client.groupMetadata(m.chat).catch(e => {}) : ''
+    const groupName = m.isGroup ? groupMetadata.subject : ''
+    const pushname = m.pushName || "No Name"
+    var budy = (typeof m.text == 'string' ? m.text : '')
+    let argsLog = (budy.length > 30) ? `${q.substring(0, 30)}...` : budy
+    if (argsLog && !m.isGroup) {
+        console.log(chalk.black(chalk.bgWhite('[ LOGS ]')), color(argsLog, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`))
+    } else if (argsLog && m.isGroup) {
+        console.log(chalk.black(chalk.bgWhite('[ LOGS ]')), color(argsLog, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`), chalk.blueBright('IN'), chalk.green(groupName))
+    }
+}
+
+
+module.exports = { os_system, download_media, ask_ai, ocr_gpt, speech2text, pushLogs }
