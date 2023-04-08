@@ -1,7 +1,7 @@
 const fs = require('fs')
 const fetch = require('node-fetch')
 const ffmpeg = require('fluent-ffmpeg')
-const { pushLogs, os_system, download_media, ask_ai, ocr_gpt, speech2text } = require('../helpers/func')
+const { download, pushLogs, os_system, download_media, ask_ai, ocr_gpt, speech2text } = require('../helpers/func')
 
 const setting = require('../key.json')
 const domain = ['vt.tiktok.com', 'app-va.tiktokv.com', 'vm.tiktok.com',
@@ -58,7 +58,13 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             const final_url = results['data'][0]['url']
             const latency = results['data'][0]['latency']
             const templateMsg = `*Author:* ${author}\n\n${caption}\n\n*${like}* Likes, *${comment}* Comments, *${share}* Share, *${views}* Views\n`
-            client.sendMessage(m.chat, { video: { url: final_url }, caption: templateMsg })
+            try {
+                let files = await download(final_url)
+                client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${files}`), caption: templateMsg })
+                await os_system(`rm -rf downloads/${files}`)
+            } catch {
+                m.reply("Downloader error!")
+            }
         } catch {
             m.reply('*Error:* Silahkan Coba lagi, jika pesan ini terus menerus muncul, hubungi pemilik bot ini')
         }

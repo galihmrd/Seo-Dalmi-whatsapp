@@ -1,9 +1,12 @@
 import os
+import requests
 import openai
 import codecs
 import speech_recognition as sr
+from random import randint
 from pydub import AudioSegment
 from multiprocessing import Process
+from urllib.request import urlretrieve
 
 input_gpt = []
 
@@ -29,7 +32,6 @@ def chat_gpt(text, key):
     except Exception as e:
        return e
 
-
 def speech2text(file_name, key):
     r = sr.Recognizer()
     wfn = file_name.replace('.opus','.wav')
@@ -38,3 +40,12 @@ def speech2text(file_name, key):
     with sr.AudioFile(wfn) as source:
         audio_data = r.record(source)
         return chat_gpt(r.recognize_google(audio_data, language="id"), key)
+
+def download_vid(url):
+#    print(url)
+    random_numb = randint(0,10000)
+    file_name = f"vid-{random_numb}-SeoDalmi_socialMedia.mp4"
+    path = "./downloads/" + file_name
+    response = requests.get(url)
+    open(path, "wb").write(response.content)
+    return file_name

@@ -78,6 +78,13 @@ async function speech2text(filename){
     return result
 }
 
+async function download(url){
+    const func = await python("../py_helper.py")
+    const result = await func.download_vid(url)
+    python.exit()
+    return result
+}
+
 async function pushLogs(client, m) {
     const groupMetadata = m.isGroup ? await client.groupMetadata(m.chat).catch(e => {}) : ''
     const groupName = m.isGroup ? groupMetadata.subject : ''
@@ -98,4 +105,4 @@ async function pushLogs(client, m) {
 }
 
 
-module.exports = { os_system, download_media, ask_ai, ocr_gpt, speech2text, pushLogs }
+module.exports = { os_system, download_media, download, ask_ai, ocr_gpt, speech2text, pushLogs }
