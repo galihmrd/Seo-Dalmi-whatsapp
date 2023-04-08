@@ -38,6 +38,13 @@ async function download_media(messages, filename) {
               { },
           )
           return await writeFile(`./downloads/${filename}.opus`, buffer)
+      } else if (messageType === 'videoMessage') {
+          const buffer = await downloadMediaMessage(
+              m,
+              'buffer',
+              { },
+          )
+          return await writeFile(`./downloads/${filename}.mp4`, buffer)
       }
 }
 
@@ -58,14 +65,14 @@ async function ask_ai(text) {
 }
 
 async function ocr_gpt(path, out){
-    const func = await python("../database.py")
+    const func = await python("../py_helper.py")
     const result = await func.ocrAI(path, out, setting.keyopenai)
     python.exit()
     return result
 }
 
 async function speech2text(filename){
-    const func = await python("../database.py")
+    const func = await python("../py_helper.py")
     const result = await func.speech2text(`downloads/${filename}.opus`, setting.keyopenai)
     python.exit()
     return result
