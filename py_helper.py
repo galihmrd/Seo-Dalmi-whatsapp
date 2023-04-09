@@ -5,8 +5,6 @@ import codecs
 import speech_recognition as sr
 from random import randint
 from pydub import AudioSegment
-from multiprocessing import Process
-from urllib.request import urlretrieve
 
 input_gpt = []
 

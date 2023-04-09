@@ -63,10 +63,10 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             await os_system(`rm -rf downloads/${files}`)
         } catch (err) {
             m.reply(err.message)
-            await os_system(`rm -rf downloads/*.mp4`)
+            await os_system(`rm -rf downloads/` + `*.mp4`)
         }
 
-    // For Group only
+    // For Private only
     } else if (!m.isGroup) {
         try {
             if (mType === 'imageMessage') {

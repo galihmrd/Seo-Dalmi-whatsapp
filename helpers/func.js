@@ -20,32 +20,20 @@ async function os_system(prompt) {
 })};
 
 async function download_media(messages, filename) {
-      const m = messages[0]
-//          if (!m.message) return
-      const messageType = Object.keys (m.message)[0]
-      console.log(messageType)
-      if (messageType === 'imageMessage') {
-          const buffer = await downloadMediaMessage(
-              m,
-              'buffer',
-              { },
-          )
-          return await writeFile(`./downloads/${filename}.jpeg`, buffer)
-      } else if (messageType === 'audioMessage') {
-          const buffer = await downloadMediaMessage(
-              m,
-              'buffer',
-              { },
-          )
-          return await writeFile(`./downloads/${filename}.opus`, buffer)
-      } else if (messageType === 'videoMessage') {
-          const buffer = await downloadMediaMessage(
-              m,
-              'buffer',
-              { },
-          )
-          return await writeFile(`./downloads/${filename}.mp4`, buffer)
-      }
+    const m = messages[0]
+    const messageType = Object.keys (m.message)[0]
+    const buffer = await downloadMediaMessage(
+        m,
+        'buffer',
+        { },
+    )
+    if (messageType === 'imageMessage') {
+        return await writeFile(`./downloads/${filename}.jpeg`, buffer)
+    } else if (messageType === 'audioMessage') {
+        return await writeFile(`./downloads/${filename}.opus`, buffer)
+    } else if (messageType === 'videoMessage') {
+        return await writeFile(`./downloads/${filename}.mp4`, buffer)
+    }
 }
 
 async function ask_ai(text) {
