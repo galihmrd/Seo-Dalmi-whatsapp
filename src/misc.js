@@ -42,8 +42,8 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             const magrib = results['data'][0]['magrib']
             const isya = results['data'][0]['isya']
             m.reply(`*Jadwal Sholat ${date} WIB*\n\n*Imsak:* ${imsyak} WIB\n*Subuh:* ${shubuh} WIB\n*Terbit:* ${terbit} WIB\n*Dzuhur:* ${dzuhur} WIB\n*Ashar:* ${ashr} WIB\n*Maghrib:* ${magrib} WIB\n*Isya:* ${isya} WIB`)
-        } catch {
-            m.reply('Error!')
+        } catch (err) {
+            m.reply(err.message)
         }
     } else if (domain.includes(m.text.split('/')[2])) {
         try {
@@ -58,44 +58,32 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             const final_url = results['data'][0]['url']
             const latency = results['data'][0]['latency']
             const templateMsg = `*Author:* ${author}\n\n${caption}\n\n*${like}* Likes, *${comment}* Comments, *${share}* Share, *${views}* Views\n`
-            try {
-                let files = await download(final_url)
-                client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${files}`), caption: templateMsg })
-                await os_system(`rm -rf downloads/${files}`)
-            } catch {
-                m.reply("Downloader error!")
-            }
-        } catch {
-            m.reply('*Error:* Silahkan Coba lagi, jika pesan ini terus menerus muncul, hubungi pemilik bot ini')
+            const files = await download(final_url)
+            client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${files}`), caption: templateMsg })
+            await os_system(`rm -rf downloads/${files}`)
+        } catch (err) {
+            m.reply(err.message)
         }
 
     // For Group only
     } else if (!m.isGroup) {
-        if (mType === 'imageMessage') {
-            try {
+        try {
+            if (mType === 'imageMessage') {
                 await download_media(chatUpdate.messages, number)
                 const result = await ocr_gpt(`${number}.jpeg`, number)
                 m.reply(result)
                 await os_system(`rm -rf downloads/${number}.jpeg`)
-            } catch {
-                m.reply("Error!")
-            }
-        } else if (mType === 'audioMessage') {
-            try {
+            } else if (mType === 'audioMessage') {
                 await download_media(chatUpdate.messages, number)
                 const result = await speech2text(number)
                 m.reply(result)
                 await os_system(`rm -rf downloads/${number}.opus && rm -rf downloads/${number}.wav`)
-            } catch {
-                m.reply("Error!")
-            }
-        } else {
-            try {
+            } else {
                 const res = await ask_ai(m.text)
                 m.reply(res)
-            } catch(err) {
-                m.reply("Error!")
             }
+        } catch (err) {
+            m.reply(err.message)
         }
     }
 }

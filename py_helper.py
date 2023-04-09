@@ -48,4 +48,8 @@ def download_vid(url):
     path = "./downloads/" + file_name
     response = requests.get(url)
     open(path, "wb").write(response.content)
-    return file_name
+    size = os.path.getsize(path)
+    if size > 50000000:
+        return f"size limit! 50000000 bytes, file size is {size} bytes"
+    else:
+        return file_name
