@@ -63,6 +63,7 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             await os_system(`rm -rf downloads/${files}`)
         } catch (err) {
             m.reply(err.message)
+            await os_system(`rm -rf downloads/*.mp4`)
         }
 
     // For Group only
