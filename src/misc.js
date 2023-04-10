@@ -65,7 +65,20 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             m.reply(err.message)
             await os_system(`rm -rf downloads/` + `*.mp4`)
         }
-
+    } else if (m.text.startsWith("!block")) {
+        if (number === setting.ownerNumber) {
+            client.updateBlockStatus(m.text.split("!block ")[1] + "@s.whatsapp.net", "block")
+            m.reply(m.text.split("!block ")[1] + " Blocked!")
+        } else {
+            m.reply("Owner only!")
+        }
+    } else if (m.text.startsWith("!unblock")) {
+        if (number === setting.ownerNumber) {
+            client.updateBlockStatus(m.text.split("!unblock ")[1] + "@s.whatsapp.net", "unblock")
+            m.reply(m.text.split("!unblock ")[1] + " Unblocked!")
+        } else {
+            m.reply("Owner only!")
+        }
     // For Private only
     } else if (!m.isGroup) {
         try {
