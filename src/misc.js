@@ -67,7 +67,7 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
         }
     } else if (m.text.startsWith("!block")) {
         if (number === setting.ownerNumber) {
-            const [result] = await client.onWhatsApp(m.text.split("!block ")[1])
+            const [result] = await sock.onWhatsApp(m.text.split("!block ")[1])
             client.updateBlockStatus(result.jid + "@s.whatsapp.net", "block")
             m.reply(m.text.split("!block ")[1] + " Blocked!")
         } else {
@@ -75,7 +75,7 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
         }
     } else if (m.text.startsWith("!unblock")) {
         if (number === setting.ownerNumber) {
-            const [result] = await client.onWhatsApp(m.text.split("!unblock ")[1])
+            const [result] = await sock.onWhatsApp(m.text.split("!unblock ")[1])
             client.updateBlockStatus(m.text.split(result.jid + "@s.whatsapp.net", "unblock")
             m.reply(m.text.split("!unblock ")[1] + " Unblocked!")
         } else {
