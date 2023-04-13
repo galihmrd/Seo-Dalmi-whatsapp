@@ -54,25 +54,31 @@ async function ask_ai(text) {
     }
 }
 
-async function ocr_gpt(path, out){
+async function ocr_gpt(path, out) {
     const func = await python("../py_helper.py")
     const result = await func.ocrAI(path, out, setting.keyopenai)
     python.exit()
     return result
 }
 
-async function speech2text(filename){
+async function speech2text(filename) {
     const func = await python("../py_helper.py")
     const result = await func.speech2text(`downloads/${filename}.opus`, setting.keyopenai)
     python.exit()
     return result
 }
 
-async function download(url){
-    const func = await python("../py_helper.py")
-    const result = await func.download_vid(url)
-    python.exit()
-    return result
+async function download(url) {
+    if (url.startsWith("@")) {
+        const urlSong = url.split('@')[1].split('|')[0]
+        const urlImg = url.split('|')[1]
+        return await tiktok_image(urlImg, urlSong)
+    } else {
+        const func = await python("../py_helper.py")
+        const result = await func.download_vid(url)
+        python.exit()
+        return result
+    }
 }
 
 async function tiktok_image(imageUrl, songUrl) {
@@ -116,4 +122,4 @@ async function pushLogs(client, m) {
 }
 
 
-module.exports = { os_system, download_media, download, ask_ai, ocr_gpt, speech2text, pushLogs, tiktok_image }
+module.exports = { os_system, download_media, download, ask_ai, ocr_gpt, speech2text, pushLogs }
