@@ -1,7 +1,7 @@
 const fs = require('fs')
 const fetch = require('node-fetch')
 const ffmpeg = require('fluent-ffmpeg')
-const { download, pushLogs, os_system, download_media, ask_ai, ocr_gpt, speech2text } = require('../helpers/func')
+const { tiktok_image, download, pushLogs, os_system, download_media, ask_ai, ocr_gpt, speech2text } = require('../helpers/func')
 
 const setting = require('../key.json')
 const domain = ['vt.tiktok.com', 'app-va.tiktokv.com', 'vm.tiktok.com',
@@ -58,9 +58,17 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             const final_url = results['data'][0]['url']
             const latency = results['data'][0]['latency']
             const templateMsg = `*Author:* ${author}\n\n${caption}\n\n*${like}* Likes, *${comment}* Comments, *${share}* Share, *${views}* Views\n`
-            const files = await download(final_url)
-            client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${files}`), caption: templateMsg })
-            await os_system(`rm -rf downloads/${files}`)
+            if (final_url.startsWith("@")) {
+                const urlSong = final_url.split('@')[1].split('|')[0]
+                const urlImg = final_url.split('|')[1]
+                const files = await tiktok_image(urlImg, urlSong)
+                client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${files}`), caption: templateMsg })
+                await os_system(`rm -rf downloads/${files}`)
+            } else {
+                const files = await download(final_url)
+                client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${files}`), caption: templateMsg })
+                await os_system(`rm -rf downloads/${files}`)
+            }
         } catch (err) {
             m.reply(err.message)
             await os_system(`rm -rf downloads/` + `*.mp4`)

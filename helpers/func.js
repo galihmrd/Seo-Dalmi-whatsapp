@@ -1,4 +1,6 @@
 const chalk = require('chalk')
+const fetch = require('node-fetch')
+const fs = require('fs')
 const { python } = require("pythonia")
 const { exec } = require("child_process");
 const { downloadMediaMessage } = require('@adiwajshing/baileys');
@@ -73,6 +75,27 @@ async function download(url){
     return result
 }
 
+async function tiktok_image(imageUrl, songUrl) {
+  const response = await fetch(imageUrl);
+  const buffer = await response.buffer();
+  writeFile(`./downloads/image.jpg`, buffer)
+  return await download_sound(songUrl)
+}
+
+async function download_sound(url) {
+  const response = await fetch(url);
+  const buffer = await response.buffer();
+  writeFile(`./downloads/sound.mp3`, buffer)
+  return await ffmpeg_vid()
+}
+
+async function ffmpeg_vid() {
+    const func = await python("../py_helper.py")
+    const result = await func.ffmpeg_vid()
+    python.exit()
+    return result
+}
+
 async function pushLogs(client, m) {
     const groupMetadata = m.isGroup ? await client.groupMetadata(m.chat).catch(e => {}) : ''
     const groupName = m.isGroup ? groupMetadata.subject : ''
@@ -93,4 +116,4 @@ async function pushLogs(client, m) {
 }
 
 
-module.exports = { os_system, download_media, download, ask_ai, ocr_gpt, speech2text, pushLogs }
+module.exports = { os_system, download_media, download, ask_ai, ocr_gpt, speech2text, pushLogs, tiktok_image }

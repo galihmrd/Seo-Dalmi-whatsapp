@@ -1,7 +1,9 @@
 import os
+import subprocess
 import requests
 import openai
 import codecs
+import shlex
 import speech_recognition as sr
 from random import randint
 from pydub import AudioSegment
@@ -51,3 +53,9 @@ def download_vid(url):
         return f"size limit! 50000000 bytes, file size is {size} bytes"
     else:
         return file_name
+
+def ffmpeg_vid():
+    os.system('cd downloads && ffmpeg -y -r 0.2 -i image.jpg -i sound.mp3 -vcodec libx264 -crf 25 -preset veryslow -acodec copy -movflags +faststart video.mp4')
+    os.remove('./downloads/image.jpg')
+    os.remove('./downloads/sound.mp3')
+    return "video.mp4"
