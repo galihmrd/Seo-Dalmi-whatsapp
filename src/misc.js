@@ -65,7 +65,24 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             m.reply(err.message)
             await os_system(`rm -rf downloads/` + `*.mp4`)
         }
-
+   } else if (m.text.startsWith("!infogempa")) {
+        try {
+             const response = await fetch(setting.rest_api + `/quake`)
+             const results = await response.json()
+             const date = results['data']['tanggal']
+             const time = results['data']['jam']
+             const coordinates = results['data']['coordinates']
+             const magnitude = results['data']['magnitude']
+             const deep = results['data']['kedalaman']
+             const wilayah = results['data']['wilayah']
+             const potensi = results['data']['potensi']
+             const dirasakan = results['data']['dirasakan']
+             const map = results['data']['shakemap']
+             const templateMsg = `*• Waktu:* ${date} | ${time}\n*• Status:* ${potensi}\n*• Pusat Gempa:* ${wilayah}\n\n*Magnitude* ${magnitude} | *Kedalaman* ${deep} | *Koordinat* ${coordinates}\n\n*• Dirasakan:* ${dirasakan}\n\nSumber: BMKG`
+             client.sendMessage(m.chat, { image: { url: map }, caption: templateMsg })
+        } catch (err) {
+             m.reply(err.message)
+        }
     // For Private only
     } else if (!m.isGroup) {
         try {
