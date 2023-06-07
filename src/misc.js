@@ -10,13 +10,19 @@ const domain = ['vt.tiktok.com', 'app-va.tiktokv.com', 'vm.tiktok.com',
                 'app-va.tiktokv.com', 'm.tiktok.com', 'm.tiktok.com',
                 'tiktok.com', 'www.tiktok.com', 'link.e.tiktok.com',
                 'us.tiktok.com', 'fb.watch', 'www.facebook.com',  'fb.me', 'www.youtube.com', 'youtu.be', 'youtube.com',
-                'fb.com', 'www.instagram.com', 'instagram.com', 'www.ig.me']
+                'fb.com', 'www.instagram.com', 'instagram.com', 'www.ig.me', 'pin.it']
 
+const yt_domain = ['www.youtube.com', 'youtu.be', 'youtube.com']
 
 module.exports = sansekai = async (client, m, chatUpdate, store) => {
     const mType = Object.keys (chatUpdate.messages[0].message)[0]
     const number = m.sender.replace('@s.whatsapp.net', '')
     const blacklist = ['12345']
+    const time = new Date().toLocaleString("id-ID", {timeZone: "Asia/Jakarta"})
+    if (!m.isGroup) {
+        const status_msg = `${m.pushName} Mengakses bot pada - ${time}`
+        await client.updateProfileStatus(status_msg)
+    }
     await pushLogs(client, m)
     if (!number.includes(blacklist)) {
        // Group and private
@@ -58,10 +64,35 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
                 const share = results['data'][0]['share']
                 const final_url = results['data'][0]['url']
                 const latency = results['data'][0]['latency']
-                const templateMsg = `*Author:* ${author}\n\n${caption}\n\n*${like}* Likes, *${comment}* Comments, *${share}* Share, *${views}* Views\n`
-                const files = await download(final_url)
-                client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${files}`), caption: templateMsg })
-                await os_system(`rm -rf downloads/${files}`)
+                const templateMsg = `*Uploaded by* ${author}\n\n${caption}\n\n*${like}* Likes, *${comment}* Comments, *${share}* Share, *${views}* Views\n`
+                const len = results['data'][0]['len_url']
+                console.log(final_url)
+                console.log(len)
+                if (len > 1) {
+                    for (let i = 0; i <= len - 1; i++) {
+                        link = final_url[i]
+                        if (link.includes("jpg") || link.includes("jpeg") || link.includes("heic") || link.includes("png")) {
+                            client.sendMessage(m.chat, { image: { url: link }})
+                        } else {
+                            client.sendMessage(m.chat, { video: { url: link }})
+                        }
+                    }
+                    m.reply(templateMsg)
+                } else {
+                    if (yt_domain.includes(m.text.split('/')[2])) {
+                        const files = await download(final_url)
+                        client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${files}`), caption: templateMsg })
+                        await os_system(`rm -rf downloads/${files}`)
+                    } else{
+                        if (final_url.includes("jpg") || final_url.includes("jpeg") || final_url.includes("heic") || final_url.includes("png")) {
+                            console.log(final_url)
+                            client.sendMessage(m.chat, { image: { url: final_url }, caption: templateMsg })
+                        } else {
+                            console.log(final_url)
+                            client.sendMessage(m.chat, { video: { url: final_url }, caption: templateMsg })
+                        }
+                    }
+                }
             } catch (err) {
                 m.reply(err.message)
                 await os_system(`rm -rf downloads/` + `*.mp4`)
