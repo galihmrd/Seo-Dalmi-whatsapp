@@ -2,8 +2,7 @@ require("http").createServer((_, res) => res.end("Berjalan coy")).listen(8080)
 
 const sessionName = 'yusril'
 const donet = 'https://saweria.co/sansekai'
-const { default: sansekaiConnect, useSingleFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto, getContentType } = require("@adiwajshing/baileys")
-const { state, saveState } = useSingleFileAuthState(`./${sessionName}.json`)
+const { default: sansekaiConnect, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto, getContentType } = require("@adiwajshing/baileys")
 const pino = require('pino')
 const { Boom } = require('@hapi/boom')
 const fs = require('fs')
@@ -118,6 +117,7 @@ function smsg(conn, m, store) {
 }
 
 async function startHisoka() {
+    const { state, saveCreds } = await useMultiFileAuthState(`./session`);
     const { version, isLatest } = await fetchLatestBaileysVersion()
 	console.log(`using WA v${version.join('.')}, isLatest: ${isLatest}`)
     console.log(color(figlet.textSync('Wa-OpenAI', {
@@ -237,7 +237,7 @@ async function startHisoka() {
         // console.log('Connected...', update)
     })
 
-    client.ev.on('creds.update', saveState)
+    client.ev.on('creds.update', saveCreds)
 
     client.sendText = (jid, text, quoted = '', options) => client.sendMessage(jid, { text: text, ...options }, { quoted })
 
