@@ -1,4 +1,4 @@
-require("http").createServer((_, res) => res.end("Berjalan coy")).listen(8080)
+require("http").createServer((_, res) => res.end("Berjalan coy")).listen(6969)
 
 const sessionName = 'yusril'
 const donet = 'https://saweria.co/sansekai'

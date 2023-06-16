@@ -35,6 +35,8 @@ async function download_media(messages, filename) {
         return await writeFile(`./downloads/${filename}.opus`, buffer)
     } else if (messageType === 'videoMessage') {
         return await writeFile(`./downloads/${filename}.mp4`, buffer)
+    } else if (messageType === 'documentMessage') {
+        return await writeFile(`./downloads/${filename}.mp4`, buffer)
     }
 }
 

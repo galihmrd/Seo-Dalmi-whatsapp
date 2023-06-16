@@ -117,8 +117,14 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             }
         // For Private only
         } else if (!m.isGroup) {
+            console.log(mType)
             try {
-                if (mType === 'imageMessage') {
+                if (mType === 'documentMessage') {
+                    const msg = "\n\nUnduh dan teruskan video ini ke status Whatsapp kamu dengan mengetuk tombol teruskan (jangan mengirim secara  manual) dan jangan lupa untuk menghapus caption bawaan ini, jika video anda melebihi 30 detik, video akan tetap pecah dan terkompres\n\n"
+                    await download_media(chatUpdate.messages, number)
+                    client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${number}.mp4`), caption: msg })
+                    await os_system(`rm -rf downloads/${number}.mp4`)
+                } else if (mType === 'imageMessage') {
                     await download_media(chatUpdate.messages, number)
                     const result = await ocr_gpt(`${number}.jpeg`, number)
                     m.reply(result)
