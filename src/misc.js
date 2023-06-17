@@ -121,16 +121,21 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             try {
                 if (mType === 'documentMessage') {
                     const msg = "\n\nUnduh dan teruskan video ini ke status Whatsapp kamu dengan mengetuk tombol teruskan (jangan mengirim secara  manual) dan jangan lupa untuk menghapus caption bawaan ini, jika video anda melebihi 30 detik, video akan tetap pecah dan terkompres\n\n"
-                    await download_media(chatUpdate.messages, number)
-                    client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${number}.mp4`), caption: msg })
-                    await os_system(`rm -rf downloads/${number}.mp4`)
+                    await download_media(chatUpdate.messages, m.text, number)
+                    if (m.text.includes("mp4")) {
+                        client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${number}.mp4`), caption: msg })
+                        await os_system(`rm -rf downloads/${number}.mp4`)
+                    } else {
+                        client.sendMessage(m.chat, { image: fs.readFileSync(`downloads/${number}.jpg`), caption: msg })
+                        await os_system(`rm -rf downloads/${number}.jpg`)
+                    }
                 } else if (mType === 'imageMessage') {
-                    await download_media(chatUpdate.messages, number)
+                    await download_media(chatUpdate.messages, m.text, number)
                     const result = await ocr_gpt(`${number}.jpeg`, number)
                     m.reply(result)
                     await os_system(`rm -rf downloads/${number}.jpeg`)
                 } else if (mType === 'audioMessage') {
-                    await download_media(chatUpdate.messages, number)
+                    await download_media(chatUpdate.messages, m.text, number)
                     const result = await speech2text(number)
                     m.reply(result)
                     await os_system(`rm -rf downloads/${number}.opus && rm -rf downloads/${number}.wav`)

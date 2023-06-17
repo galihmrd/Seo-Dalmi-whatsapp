@@ -21,7 +21,7 @@ async function os_system(prompt) {
     }
 })};
 
-async function download_media(messages, filename) {
+async function download_media(messages, text, filename) {
     const m = messages[0]
     const messageType = Object.keys (m.message)[0]
     const buffer = await downloadMediaMessage(
@@ -36,7 +36,11 @@ async function download_media(messages, filename) {
     } else if (messageType === 'videoMessage') {
         return await writeFile(`./downloads/${filename}.mp4`, buffer)
     } else if (messageType === 'documentMessage') {
-        return await writeFile(`./downloads/${filename}.mp4`, buffer)
+        if (!text.includes("mp4")) {
+            return await writeFile(`./downloads/${filename}.jpg`, buffer)
+        } else {
+            return await writeFile(`./downloads/${filename}.mp4`, buffer)
+        }
     }
 }
 
