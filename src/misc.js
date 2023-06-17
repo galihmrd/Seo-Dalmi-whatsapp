@@ -120,7 +120,7 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             console.log(mType)
             try {
                 if (mType === 'documentMessage') {
-                    const msg = "\n\nUnduh dan teruskan video ini ke status Whatsapp kamu dengan mengetuk tombol teruskan (jangan mengirim secara  manual) dan jangan lupa untuk menghapus caption bawaan ini, jika video anda melebihi 30 detik, video akan tetap pecah dan terkompres\n\n"
+                    const msg = "\n\nSilahkan unduh dan kirim ke status Whatsapp kamu!\n\n"
                     await download_media(chatUpdate.messages, m.text, number)
                     if (m.text.includes("mp4")) {
                         client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${number}.mp4`), caption: msg })
