@@ -120,14 +120,25 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             console.log(mType)
             try {
                 if (mType === 'documentMessage') {
+                    if (m.text.endsWith("jpg")) {
+                        var file_name = `${number}.jpg`
+                    } else if (m.text.endsWith("jpeg")) {
+                        var file_name = `${number}.jpeg`
+                    } else if (m.text.endsWith("png")) {
+                        var file_name = `${number}.png`
+                    } else if (m.text.endsWith("heic")) {
+                        var file_name = `${number}.heic`
+                    } else {
+                        var file_name = `${number}.mp4`
+                    }
                     const msg = "\n\nSilahkan unduh dan kirim ke status Whatsapp kamu!\n\n"
                     await download_media(chatUpdate.messages, m.text, number)
                     if (m.text.includes("mp4")) {
-                        client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${number}.mp4`), caption: msg })
-                        await os_system(`rm -rf downloads/${number}.mp4`)
+                        client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${file_name}`), caption: msg })
+                        await os_system(`rm -rf downloads/${file_name}`)
                     } else {
-                        client.sendMessage(m.chat, { image: fs.readFileSync(`downloads/${number}.jpg`), caption: msg })
-                        await os_system(`rm -rf downloads/${number}.jpg`)
+                        client.sendMessage(m.chat, { image: fs.readFileSync(`downloads/${file_name}`), caption: msg })
+                        await os_system(`rm -rf downloads/${file_name}`)
                     }
                 } else if (mType === 'imageMessage') {
                     await download_media(chatUpdate.messages, m.text, number)

@@ -37,7 +37,15 @@ async function download_media(messages, text, filename) {
         return await writeFile(`./downloads/${filename}.mp4`, buffer)
     } else if (messageType === 'documentMessage') {
         if (!text.includes("mp4")) {
-            return await writeFile(`./downloads/${filename}.jpg`, buffer)
+            if (text.endsWith("jpg")) {
+                return await writeFile(`./downloads/${filename}.jpg`, buffer)
+            } else if (text.endsWith("png")) {
+                return await writeFile(`./downloads/${filename}.png`, buffer)
+            } else if (text.endsWith("jpeg")) {
+                return await writeFile(`./downloads/${filename}.jpeg`, buffer)
+            } else if (text.endsWith("heic")) {
+                return await writeFile(`./downloads/${filename}.heic`, buffer)
+            }
         } else {
             return await writeFile(`./downloads/${filename}.mp4`, buffer)
         }
