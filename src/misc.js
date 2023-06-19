@@ -59,15 +59,10 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
                 const author = results['data'][0]['author']
                 const caption = results['data'][0]['caption']
                 const views = results['data'][0]['views']
-                const like = results['data'][0]['like']
-                const comment = results['data'][0]['comment']
-                const share = results['data'][0]['share']
                 const final_url = results['data'][0]['url']
                 const latency = results['data'][0]['latency']
-                const templateMsg = `*Uploaded by* ${author}\n\n${caption}\n\n*${like}* Likes, *${comment}* Comments, *${share}* Share, *${views}* Views\n`
+                const templateMsg = `*Uploaded by* ${author}\n\n${caption}\n\n`
                 const len = results['data'][0]['len_url']
-                console.log(final_url)
-                console.log(len)
                 if (len > 1) {
                     for (let i = 0; i <= len - 1; i++) {
                         link = final_url[i]
@@ -117,28 +112,16 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
             }
         // For Private only
         } else if (!m.isGroup) {
-            console.log(mType)
             try {
                 if (mType === 'documentMessage') {
-                    if (m.text.endsWith("jpg")) {
-                        var file_name = `${number}.jpg`
-                    } else if (m.text.endsWith("jpeg")) {
-                        var file_name = `${number}.jpeg`
-                    } else if (m.text.endsWith("png")) {
-                        var file_name = `${number}.png`
-                    } else if (m.text.endsWith("heic")) {
-                        var file_name = `${number}.heic`
-                    } else {
-                        var file_name = `${number}.mp4`
-                    }
                     const msg = "\n\nSilahkan unduh dan kirim ke status Whatsapp kamu!\n\n"
                     await download_media(chatUpdate.messages, m.text, number)
-                    if (m.text.includes("mp4")) {
-                        client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${file_name}`), caption: msg })
-                        await os_system(`rm -rf downloads/${file_name}`)
+                    if (m.text.endsWith("mp4") || m.text.endsWith("mkv") || m.text.endsWith("mov")) {
+                        client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${m.text}`), caption: msg })
+                        await os_system(`rm -rf downloads/${m.text}`)
                     } else {
-                        client.sendMessage(m.chat, { image: fs.readFileSync(`downloads/${file_name}`), caption: msg })
-                        await os_system(`rm -rf downloads/${file_name}`)
+                        client.sendMessage(m.chat, { image: fs.readFileSync(`downloads/${m.text}`), caption: msg })
+                        await os_system(`rm -rf downloads/${m.text}`)
                     }
                 } else if (mType === 'imageMessage') {
                     await download_media(chatUpdate.messages, m.text, number)
