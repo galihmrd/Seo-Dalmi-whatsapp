@@ -23,11 +23,15 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
         const status_msg = `${m.pushName} Mengakses bot pada - ${time}`
         await client.updateProfileStatus(status_msg)
     }
-    await pushLogs(client, m)
+    if (mType != 'documentMessage') {
+        await pushLogs(client, m, m.text)
+    } else {
+        await pushLogs(client, m, 'Reupload media')
+    }
     if (!number.includes(blacklist)) {
        // Group and private
         if (m.text.startsWith('stiker') || m.text.startsWith('Stiker') || m.text.startsWith('sticker') || m.text.startsWith('Sticker')) {
-            let loc = await download_media(chatUpdate.messages, `${number}`)
+            let loc = await download_media(chatUpdate.messages, m.text, `${number}`)
             ffmpeg(`downloads/${number}.jpeg`)
                 .outputOptions(["-y", "-vcodec libwebp", "-lossless 1", "-qscale 1", "-preset default", "-loop 0", "-an", "-vsync 0", "-s 600x600"])
                 .videoFilters('scale=600:600:flags=lanczos:force_original_aspect_ratio=decrease,format=rgba,pad=600:600:(ow-iw)/2:(oh-ih)/2:color=#00000000,setsar=1')
@@ -114,14 +118,15 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
         } else if (!m.isGroup) {
             try {
                 if (mType === 'documentMessage') {
+                    const docName = m.message.documentMessage.fileName
                     const msg = "\n\nSilahkan unduh dan kirim ke status Whatsapp kamu!\n\n"
-                    await download_media(chatUpdate.messages, m.text, number)
-                    if (m.text.endsWith("mp4") || m.text.endsWith("mkv") || m.text.endsWith("mov")) {
-                        client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${m.text}`), caption: msg })
-                        await os_system(`rm -rf downloads/${m.text}`)
+                    await download_media(chatUpdate.messages, docName, number)
+                    if (docName.endsWith("mp4") || m.text.endsWith("mkv") || m.text.endsWith("mov")) {
+                        client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${docName}`), caption: msg })
+                        await os_system(`rm -rf downloads/${docName}`)
                     } else {
-                        client.sendMessage(m.chat, { image: fs.readFileSync(`downloads/${m.text}`), caption: msg })
-                        await os_system(`rm -rf downloads/${m.text}`)
+                        client.sendMessage(m.chat, { image: fs.readFileSync(`downloads/${docName}`), caption: msg })
+                        await os_system(`rm -rf downloads/${docName}`)
                     }
                 } else if (mType === 'imageMessage') {
                     await download_media(chatUpdate.messages, m.text, number)

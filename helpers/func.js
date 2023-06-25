@@ -104,7 +104,7 @@ async function ffmpeg_vid() {
     return result
 }
 
-async function pushLogs(client, m) {
+async function pushLogs(client, m, msg) {
     const groupMetadata = m.isGroup ? await client.groupMetadata(m.chat).catch(e => {}) : ''
     const groupName = m.isGroup ? groupMetadata.subject : ''
     const pushname = m.pushName || "No Name"
@@ -113,12 +113,12 @@ async function pushLogs(client, m) {
     if (argsLog && !m.isGroup) {
         console.log(chalk.black(chalk.bgWhite('[ LOGS ]')), color(argsLog, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`))
         if (setting.pushTele) {
-            await os_system(`curl -s -X POST https://api.telegram.org/bot${setting.teleToken}/sendMessage?chat_id=${setting.teleChatid} -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>From:</b> ${m.pushName} | wa.me/${m.sender.replace('@s.whatsapp.net', '')}\n<b>Message:</b> ${m.text}"`)
+            await os_system(`curl -s -X POST https://api.telegram.org/bot${setting.teleToken}/sendMessage?chat_id=${setting.teleChatid} -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>From:</b> ${m.pushName} | wa.me/${m.sender.replace('@s.whatsapp.net', '')}\n<b>Message:</b> ${msg}"`)
         }
     } else if (argsLog && m.isGroup) {
         console.log(chalk.black(chalk.bgWhite('[ LOGS ]')), color(argsLog, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`), chalk.blueBright('IN'), chalk.green(groupName))
         if (setting.pushTele) {
-            await os_system(`curl -s -X POST https://api.telegram.org/bot${setting.teleToken}/sendMessage?chat_id=${setting.teleChatid} -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>From:</b> ${m.pushName} | wa.me/${m.sender.replace('@s.whatsapp.net', '')} in ${groupName}\n<b>Message:</b> ${m.text}"`)
+            await os_system(`curl -s -X POST https://api.telegram.org/bot${setting.teleToken}/sendMessage?chat_id=${setting.teleChatid} -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>From:</b> ${m.pushName} | wa.me/${m.sender.replace('@s.whatsapp.net', '')} in ${groupName}\n<b>Message:</b> ${msg}"`)
         }
     }
 }
