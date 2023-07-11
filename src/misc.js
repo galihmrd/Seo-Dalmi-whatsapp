@@ -121,7 +121,7 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
                     const docName = m.message.documentMessage.fileName
                     const msg = "\n\nSilahkan unduh dan kirim ke status Whatsapp kamu!\n\n"
                     await download_media(chatUpdate.messages, docName, number)
-                    if (docName.endsWith("mp4") || m.text.endsWith("mkv") || m.text.endsWith("mov")) {
+                    if (docName.endsWith("mp4") || docName.endsWith("mkv") || docName.endsWith("mov")) {
                         client.sendMessage(m.chat, { video: fs.readFileSync(`downloads/${docName}`), caption: msg })
                         await os_system(`rm -rf downloads/${docName}`)
                     } else {
