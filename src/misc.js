@@ -10,7 +10,7 @@ const domain = ['vt.tiktok.com', 'app-va.tiktokv.com', 'vm.tiktok.com',
                 'app-va.tiktokv.com', 'm.tiktok.com', 'm.tiktok.com',
                 'tiktok.com', 'www.tiktok.com', 'link.e.tiktok.com',
                 'us.tiktok.com', 'fb.watch', 'www.facebook.com',  'fb.me', 'www.youtube.com', 'youtu.be', 'youtube.com',
-                'fb.com', 'www.instagram.com', 'instagram.com', 'www.ig.me', 'pin.it']
+                'fb.com', 'www.instagram.com', 'instagram.com', 'www.ig.me', 'pin.it', 'www.threads.net']
 
 const yt_domain = ['www.youtube.com', 'youtu.be', 'youtube.com']
 
